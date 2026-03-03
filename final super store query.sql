@@ -1,0 +1,277 @@
+/* 
+=====================================================
+PROJECT: Super Store Profitability Analysis
+AUTHOR: Fares Mubarak
+TOOLS: SQL Server
+OBJECTIVE:
+Investigate the root causes behind the low overall
+profit margin (17%) and identify structural 
+profitability risks across products, regions,
+segments, discounts, and customers.
+=====================================================
+*/
+
+-- ===============================================================
+-- CASE 1: Overall Sales and Profit Performance
+-- ===============================================================
+SELECT 
+    SUM(sales) AS Total_Sales,
+    SUM(profit) AS Total_Profit,
+    ROUND(SUM(profit) * 1.0 / NULLIF(SUM(sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder;
+
+-- Observation: Low profit margin (~17%) indicates low efficiency.
+
+-- ===============================================================
+-- CASE 2: Sales and Profit by Sub-Category
+-- ===============================================================
+SELECT 
+    p.sub_category,
+    SUM(f.sales) AS Total_Sales,
+    SUM(f.profit) AS Total_Profit,
+    ROUND(SUM(f.profit) * 1.0 / NULLIF(SUM(f.sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder f
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+GROUP BY p.sub_category
+ORDER BY Profit_Margin ASC;
+
+-- Observation: Loss observed for 'Supplies' in 'Furniture' category.
+
+-- ===============================================================
+-- CASE 3: Discount and Profit Analysis for Supplies
+-- ===============================================================
+SELECT  
+    c.region,
+    p.sub_category,
+    ROUND(AVG(f.discount), 2) AS Avg_Discount,
+    ROUND(SUM(f.profit) * 1.0 / NULLIF(SUM(f.sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder f
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+JOIN dbo.dimcustomer c ON f.Customer_ID = c.Customer_ID
+GROUP BY c.region, p.sub_category
+HAVING p.sub_category = 'Supplies'
+ORDER BY Profit_Margin ASC;
+
+-- Recommendation: Reduce discount rate in EAST region to improve profitability.
+
+-- ===============================================================
+-- CASE 4: Effect of Discounts on Sales Volume
+-- ===============================================================
+SELECT  
+    SUM(f.Quantity) AS Units_Sold,
+    p.sub_category,
+    ROUND(AVG(f.discount), 2) AS Avg_Discount,
+    ROUND(SUM(f.profit) * 1.0 / NULLIF(SUM(f.sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder f
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+JOIN dbo.dimcustomer c ON f.Customer_ID = c.Customer_ID
+GROUP BY p.sub_category
+ORDER BY Profit_Margin ASC, Units_Sold DESC;
+
+-- Observation: High discounts on 'Tables' in Southeast Asia & EMEA lead to negative margins.
+
+-- ===============================================================
+-- CASE 5: Profit by Sub-Category, Segment, and Region
+-- ===============================================================
+SELECT  
+    SUM(f.Quantity) AS Units_Sold,
+    p.sub_category,
+    ROUND(AVG(f.discount), 2) AS Avg_Discount,
+    ROUND(SUM(f.profit) * 1.0 / NULLIF(SUM(f.sales), 0), 2) AS Profit_Margin,
+    c.segment,
+    c.region
+FROM dbo.Factorder f
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+JOIN dbo.dimcustomer c ON f.Customer_ID = c.Customer_ID
+GROUP BY p.sub_category, c.segment, c.region
+HAVING p.sub_category IN ('Supplies', 'Tables')
+ORDER BY Profit_Margin ASC, Units_Sold DESC;
+
+
+-- Observation: Low-profit sub-categories (Supplies, Tables) in certain segments/regions reduce overall profitability.
+-- Recommendation: Adjust discount strategy and pricing for underperforming products and regions.
+
+-- ===============================================================
+-- CASE 6: Corporate Segment Analysis (South Region)
+-- ===============================================================
+SELECT 
+    c.segment,
+    c.region,
+    p.category,
+    p.sub_category,
+    COUNT(DISTINCT f.Order_ID) AS Order_Count,
+    ROUND(SUM(f.Sales), 2) AS Total_Sales,
+    ROUND(SUM(f.Profit), 2) AS Total_Profit,
+    ROUND(SUM(f.Profit) * 1.0 / NULLIF(SUM(f.Sales), 0), 2) AS Profit_Margin,
+    ROUND(AVG(f.discount), 2) AS Avg_Discount
+FROM dbo.Factorder f
+JOIN dbo.dimcustomer c ON f.Customer_ID = c.Customer_ID
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+GROUP BY c.segment, c.region, p.category, p.sub_category
+HAVING c.segment = 'Corporate' AND c.region = 'South'
+ORDER BY Total_Profit DESC;
+
+-- Observation: High losses in Machines and Tables due to excessive discounts.
+-- Recommendation: Reduce discounts in Corporate South segment to improve profitability.
+
+-- ===============================================================
+-- CASE 7: Home Office Segment Analysis
+-- ===============================================================
+SELECT 
+    c.segment,
+    c.region,
+    p.category,
+    COUNT(DISTINCT f.Order_ID) AS Order_Count,
+    ROUND(SUM(f.Sales), 2) AS Total_Sales,
+    ROUND(SUM(f.Profit), 2) AS Total_Profit,
+    ROUND(SUM(f.Profit) * 1.0 / NULLIF(SUM(f.Sales), 0), 2) AS Profit_Margin,
+    ROUND(AVG(f.discount), 2) AS Avg_Discount
+FROM dbo.Factorder f
+JOIN dbo.dimcustomer c ON f.Customer_ID = c.Customer_ID
+JOIN dbo.dimproduct p ON f.Product_ID = p.Product_ID
+GROUP BY c.segment, c.region, p.category
+HAVING c.segment = 'Home Office'
+ORDER BY Total_Profit ASC;
+
+-- Observation: Technology products yield highest profit, Furniture shows losses.
+-- Recommendation: Focus on increasing Furniture profitability through pricing and discount adjustments.
+
+-- ===============================================================
+-- CASE 8: Monthly Sales Growth Rate YoY/MoM (2012)
+-- ===============================================================
+SELECT 
+    YEAR(Order_Date) AS Year,
+    MONTH(Order_Date) AS Month,
+    ROUND(AVG(Discount), 2) AS Avg_Discount, 
+    ROUND(SUM(Sales), 2) AS Total_Sales,
+    ROUND(SUM(Profit), 2) AS Total_Profit,
+    SUM(Quantity) AS Units_Sold,
+    ROUND(SUM(Profit) * 1.0 / NULLIF(SUM(Sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder
+GROUP BY YEAR(Order_Date), MONTH(Order_Date)
+HAVING YEAR(Order_Date) = 2012
+ORDER BY Total_Profit DESC;
+
+-- Observation: Jan 2012 experienced losses due to high discounting (~15%) and low sales (<70 units).
+-- Recommendation: Review Q1 discount strategy to avoid margin erosion in low-demand
+
+-- ===============================================================
+-- CASE 9: Summary Orders Table Creation for visuals
+-- ===============================================================
+
+TRUNCATE TABLE dbo.Summary_Orders;
+
+-- Insert updated summary data
+INSERT INTO dbo.Summary_Orders
+SELECT 
+    YEAR(f.Order_Date) AS Year,
+    MONTH(f.Order_Date) AS Month,
+    c.Region,
+    c.Segment,
+    p.Category,
+    p.Sub_Category,
+    COUNT(DISTINCT f.Order_ID) AS Order_Count,
+    SUM(f.Quantity) AS Units_Sold,
+    ROUND(SUM(f.Sales), 2) AS Total_Sales,
+    ROUND(SUM(f.Profit), 2) AS Total_Profit,
+    ROUND(SUM(f.Profit) * 1.0 / NULLIF(SUM(f.Sales), 0), 2) AS Profit_Margin,
+    ROUND(AVG(f.Discount), 2) AS Avg_Discount
+FROM dbo.Factorder f
+JOIN dbo.DimCustomer c ON f.Customer_ID = c.Customer_ID
+JOIN dbo.DimProduct p ON f.Product_ID = p.Product_ID
+GROUP BY 
+    YEAR(f.Order_Date),
+    MONTH(f.Order_Date),
+    c.Region,
+    c.Segment,
+    p.Category,
+    p.Sub_Category;
+
+-- ===============================================================
+-- CASE 10: Top and Bottom Products by Profitability
+-- ===============================================================
+SELECT TOP 10 
+    p.Product_Name AS Product, 
+    ROUND(SUM(f.Profit), 2) AS Total_Profit
+FROM dbo.Factorder f
+JOIN dbo.DimProduct p ON f.Product_ID = p.Product_ID
+GROUP BY p.Product_Name
+ORDER BY Total_Profit DESC;
+
+-- Observation: Top products (e.g., Copiers, Accessories) contribute most to profitability.
+-- Recommendation: Focus marketing and inventory efforts on high-margin products.
+
+-- ===============================================================
+-- CASE 11: Customer Profitability Analysis
+-- ===============================================================
+SELECT TOP 10 
+    SUM(f.Quantity) AS Units_Sold,
+    c.Segment,
+    c.Customer_Name AS Customer,
+    ROUND(SUM(f.Profit), 2) AS Total_Profit,
+    ROUND(AVG(f.Discount), 2) AS Avg_Discount,
+    ROUND(SUM(f.Sales) * 1.0 / NULLIF(SUM(f.Profit), 0), 2) AS Profit_Margin
+FROM dbo.Factorder f
+JOIN dbo.DimCustomer c ON f.Customer_ID = c.Customer_ID
+GROUP BY c.Customer_Name, c.Segment
+ORDER BY Total_Profit ASC;
+
+-- Observation: Some customers in consumer segment receive high discounts leading to negative profitability.
+-- Recommendation: Review discount allocations and prioritize profitable customers.
+
+
+-- ===============================================================
+-- CASE 12: Discount Buckets Analysis
+-- ===============================================================
+SELECT 
+    CASE 
+        WHEN Discount <= 0.1 THEN '0-10%'
+        WHEN Discount <= 0.2 THEN '10-20%'
+        WHEN Discount <= 0.3 THEN '20-30%'
+        ELSE '30%+'
+    END AS Discount_Bucket,
+    SUM(Quantity) AS Total_Quantity,
+    SUM(Sales) AS Total_Sales,
+    SUM(Profit) AS Total_Profit,
+    SUM(Profit) * 1.0 / SUM(Sales) AS Profit_Margin
+FROM dbo.Factorder
+GROUP BY 
+    CASE 
+        WHEN Discount <= 0.1 THEN '0-10%'
+        WHEN Discount <= 0.2 THEN '10-20%'
+        WHEN Discount <= 0.3 THEN '20-30%'
+        ELSE '30%+'
+    END
+ORDER BY Discount_Bucket;
+
+-- Observation: Orders with discounts above 30% show negative profit margins (~-37.9%).
+-- Recommendation: Limit excessive discounts and implement product-specific discount controls.
+
+-- ===============================================================
+-- CASE 13: Sub-Category Impact on High Discounts (>30%)
+-- ===============================================================
+SELECT 
+    p.Sub_Category,
+    ROUND(SUM(f.Sales), 2) AS Total_Sales,
+    ROUND(SUM(f.Profit), 2) AS Total_Profit,
+    ROUND(SUM(f.Profit) * 1.0 / NULLIF(SUM(f.Sales), 0), 2) AS Profit_Margin
+FROM dbo.Factorder f
+JOIN dbo.DimProduct p ON f.Product_ID = p.Product_ID
+WHERE f.Discount > 0.3
+GROUP BY p.Sub_Category
+ORDER BY Profit_Margin DESC;
+
+-- Observation: Binders, Appliances, Phones show severe margin erosion under high discounts.
+-- Recommendation: Apply product-level discount controls rather than blanket discounting.
+
+/* =====================================================
+FINAL TECHNICAL CONCLUSION
+=====================================================
+
+The primary driver of low overall margin is excessive
+discounting, particularly above 30%, and concentrated
+losses in specific sub-categories and segments.
+
+Further action should focus on structured discount
+governance and margin-based pricing controls.
+===================================================== */
