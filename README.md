@@ -41,3 +41,17 @@ Regional Variance: The East Region showed specific inefficiencies in the Corpora
 Implement a Discount Governance Policy: Limit blanket discounts and cap them at 20% for low-margin sub-categories.
 
 Product-Level Controls: Revise pricing strategies for the Supplies sub-category which is currently underperforming.
+
+📂 Dataset
+
+The dataset used in this project is the Superstore Sales dataset from kaggle , commonly used for business analytics practice.
+
+It contains information about:
+- Orders
+- Products
+- Customer 
+- Regions
+- Discounts
+- Profit
+
+
