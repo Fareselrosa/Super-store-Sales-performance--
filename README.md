@@ -9,6 +9,11 @@ This project aims to investigate the root causes behind the 17% overall profit m
 The goal was to identify structural profitability risks across products, regions, segments, and discount strategies to provide actionable business recommendations.
 
 
+# 📊 Superstore Sales & Profit Performance Dashboard
+
+> **Live Interactive Version:** [Explore the Full Dashboard Here](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
+
+
 
 <img width="1920" height="1080" alt="Screenshot (44)" src="https://github.com/user-attachments/assets/cadb675d-ce20-4945-aabc-34a16e4e302e" />
 
