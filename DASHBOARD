@@ -1,13 +1,6 @@
-# 📊 Superstore Sales & Profit Performance Dashboard
+📊 Superstore Sales & Profit Performance Dashboard
+Live Interactive Version: Explore the Full Dashboard Here
 
-> **Live Interactive Version:** [Explore the Full Dashboard Here](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
-
-## 💻 Dashboard Preview
-[![Superstore Dashboard](https://raw.githubusercontent.com/Fareselrosa/Supply-chain-analysis-python-project/main/Screenshot%20(44).png)](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
-
-*(Click the image above to interact with the live data filters and tooltips)*
-
----
 
 ## 🎯 Key Business Insights
 * **Sales Engines:** Technology is the leading category with nearly **$1.0M** in sales.
@@ -25,3 +18,4 @@
 * **Power BI Desktop:** For data modeling and visualization.
 * **Power Query:** For data cleaning and transformation (ETL).
 * **DAX (Data Analysis Expressions):** Created custom measures for YOY Growth and Profit Margin %.
+
