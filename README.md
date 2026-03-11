@@ -1,6 +1,14 @@
 
 📊 Super Store Profitability Investigation (SQL & Power BI)
 
+# 📊 Superstore Sales & Profit Performance Dashboard
+
+> **Live Interactive Version:** [Explore the Full Dashboard Here](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
+
+## 💻 Dashboard Preview
+[![Superstore Dashboard](https://raw.githubusercontent.com/Fareselrosa/Supply-chain-analysis-python-project/main/Screenshot%20(44).png)](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
+
+*(Click the image above to interact with the live data filters and tooltips)*
 
 <img width="1920" height="1080" alt="Screenshot (44)" src="https://github.com/user-attachments/assets/cadb675d-ce20-4945-aabc-34a16e4e302e" />
 
