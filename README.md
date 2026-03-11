@@ -1,5 +1,5 @@
 
-📊 Super Store Profitability Investigation (SQL & Power BI)
+# 📊 Super Store Profitability Investigation (SQL & Power BI)
 
 
 
@@ -9,7 +9,7 @@ This project aims to investigate the root causes behind the 17% overall profit m
 The goal was to identify structural profitability risks across products, regions, segments, and discount strategies to provide actionable business recommendations.
 
 
-# 📊 Superstore Sales & Profit Performance Dashboard
+#  Superstore Sales & Profit Performance Dashboard
 
 > **Live Interactive Version:** [Explore the Full Dashboard Here](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
 
