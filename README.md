@@ -48,13 +48,6 @@ Implement a Discount Governance Policy: Limit blanket discounts and cap them at 
 Product-Level Controls: Revise pricing strategies for the Supplies sub-category which is currently underperforming.
 
 
-
-# 📊 Superstore Sales & Profit Performance Dashboard
-
-> **Live Interactive Version:** [Explore the Full Dashboard Here](https://app.powerbi.com/view?r=eyJrIjoiNjFkZmU1ZDMtOWZkMi00N2U2LTg2NWYtODg4ZmE3MzBhYjEzIiwidCI6ImVhZjYyNGM4LWEwYzQtNDE5NS04N2QyLTQ0M2U1ZDc1MTZjZCIsImMiOjh9)
-
-
-
 📂 Dataset
 
 The dataset used in this project is the Superstore Sales dataset from kaggle , commonly used for business analytics practice.
